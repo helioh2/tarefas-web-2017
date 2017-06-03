@@ -11,6 +11,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <script src="https://code.jquery.com/jquery-2.2.3.js" integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4=" crossorigin="anonymous"></script>
+
     </head>
     <body>
         <table>
@@ -21,10 +23,10 @@
     <th>Data de finalização</th>
   </tr>
   <c:forEach var="tarefa" items="${tarefas}">
-      <tr>
+      <tr id="tarefa_${tarefa.id}">
           <td>${tarefa.id}</td>
           <td>${tarefa.descricao}</td>
-          <td>
+          <td id="coluna_finalizado_${tarefa.id}">
               <c:if test="${tarefa.finalizado eq false}">
                   Não
               </c:if>
@@ -33,12 +35,34 @@
               </c:if>
                   
           </td>
-          <td>${tarefa.dataFinalizacao.time}</td>
-          <td><a href="removeTarefa?id=${tarefa.id}">Remover</a>
+          <td id "data_finalizado_${tarefa.id}"><fmt:formatDate 
+      value="${tarefa.dataFinalizacao.time}" 
+      pattern="dd/MM/yyyy" /></td>
+          <td><a href="removeTarefa?id=${tarefa.id}">Remover</a></td>
+          <td>
+              <c:if test="${tarefa.finalizado eq false}">
+                  <a href="#" onclick="finalizaAgora(${tarefa.id})">Finalizar</a>
+              </c:if>
+          </td>  
       </tr>
   </c:forEach>
    </table>
 
+        <script type="text/javascript">
+            
+//            function alertQuandoOk(dadosDeResposta) {
+//                alert("Tarefa finalizada!");
+//    }       }
+            
+            function finalizaAgora(id) {
+                $.get("finalizaTarefa?id=" + id, function(dadosDeResposta) {
+        //$("#coluna_finalizado_"+id).html("Sim");
+        //$("data_finalizado_${tarefa.id}").html("Sim");
+        //alert("Tarefa finalizada!");
+        $("#tarefa_"+id).html(dadosDeResposta);
+      });
+            }
+        </script>
         
     </body>
 </html>

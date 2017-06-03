@@ -7,7 +7,11 @@ package br.ufpr.tarefas.controllers;
 
 import br.ufpr.tarefas.dao.JdbcTarefaDao;
 import br.ufpr.tarefas.model.Tarefa;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +55,22 @@ public class TarefaController {
         JdbcTarefaDao dao = new JdbcTarefaDao();
         dao.remove(tarefa);
         return "redirect:listaTarefas";
+    }
+    
+    @RequestMapping("/finalizaTarefa")
+    public String finaliza(Tarefa tarefa, Model model)  {
+        JdbcTarefaDao dao = new JdbcTarefaDao();
+        tarefa = dao.buscaPorId(tarefa.getId());
+        tarefa.setFinalizado(true);
+        tarefa.setDataFinalizacao(Calendar.getInstance());
+        dao.altera(tarefa);
+        
+        model.addAttribute("tarefa", tarefa);
+        return "tarefa/dataFinalizada";
+//        String data = new SimpleDateFormat("dd/MM/yyyy").format(tarefa.getDataFinalizacao());  
+//        response.getWriter().write(data);
+//        response.setStatus(200);
+//        //response.set
     }
     
 }
